@@ -26,11 +26,14 @@ class EmployeeController extends Controller
             $save->Email = $params['Email'];
             $save->Address = $params['Address'];
             $save->Phone = $params['Phone'];
-            $save->DOB = $params['DOB'];
+            if (isset($params['DOB']))
+                $save->DOB = $params['DOB'];
             $save->image = $file_name;
-            $save->save();
-
-            return response()->json("Employee details saved successfully", 200);
+            $result = $save->save();
+            if ($result)
+                return response()->json("Employee details saved successfully", 200);
+            else
+                return response()->json("Something went wrong", 500);
         } catch (Exception $ex) {
         }
     }
@@ -55,14 +58,32 @@ class EmployeeController extends Controller
                 $file_name = time() . '_' . $image->getClientOriginalName();;
                 $file_path = $request->file('Image')->storeAs('uploads', $file_name, 'public');
             }
-            $updatearray = [
-                'Employee_Name' => $params['Employee_Name'],
-                'Email' => $params['Email'],
-                'Address' => $params['Address'],
-                'Phone' => $params['Phone'],
-                'DOB' => $params['DOB'],
-                'image' => $file_name
-            ];
+            // $updatearray = [
+            //     'Employee_Name' => $params['Employee_Name'],
+            //     'Email' => $params['Email'],
+            //     'Address' => $params['Address'],
+            //     'Phone' => $params['Phone'],
+            //     'DOB' => $params['DOB'],
+            //     'image' => $file_name
+            // ];
+            if (isset($params['Employee_Name'])) {
+                $updatearray['Employee_Name'] = $params['Employee_Name'];
+            }
+            if (isset($params['Email'])) {
+                $updatearray['Email'] = $params['Email'];
+            }
+            if (isset($params['Address'])) {
+                $updatearray['Address'] = $params['Address'];
+            }
+            if (isset($params['Phone'])) {
+                $updatearray['Phone'] = $params['Phone'];
+            }
+            if (isset($params['DOB'])) {
+                $updatearray['DOB'] = $params['DOB'];
+            }
+            if (isset($params['file'])) {
+                $updatearray['image'] = $file_name;
+            }
             $update = employees::where('id', $params['id'])->update($updatearray);
             if ($update) {
                 return response()->json("Employee details updated successfully", 200);

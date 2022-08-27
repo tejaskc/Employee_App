@@ -24,11 +24,7 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required',
-            'Employee_Name' => 'required',
-            'Address' => 'required',
-            'Email' => 'required|email',
-            'Phone' => 'required|numeric'
+            'id' => 'required'
         ];
     }
 }
